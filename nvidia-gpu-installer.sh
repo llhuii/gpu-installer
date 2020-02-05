@@ -50,7 +50,7 @@ get_latest_nvidia_driver()
     driver_result_url=$(curl -s "https://www.nvidia.com/Download/processDriver.aspx?pfid=$product_value&rpf=1&osid=$os_value" | sed s/http:/https:/)
     NVIDIA_DRIVER_VERSION=$(curl -s "$driver_result_url" | awk '
         { gsub(/\r/,"") }
-        start && $1~/^[0-9]+(\.[0-9]*)?$/{
+        start && $1~/^[0-9]+(\.[0-9]*)*$/{
           print $1;exit
         }
         $1=="Version:"{start=1}
