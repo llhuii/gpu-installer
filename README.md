@@ -86,7 +86,15 @@ systemctl status nvidia-drivers-loader
 ```
 
 3. 报"E: Failed to fetch ... Hash Sum mismatch" 错误
-<br>网络不稳定，请尝试重新运行此脚本
+<br/>网络不稳定，请尝试重新运行此脚本
+
+4. centos下报"error: unpacking of archive failed to on file /etc/hosts: cpio: rename"
+<br/> 原因分析：这是在centos容器镜像里安装[setup包](https://centos.pkgs.org/7/centos-x86_64/setup-2.8.71-11.el7.noarch.rpm.html)，setup包含`/etc/hosts`，rename没有权限。看了下`yum install`覆盖原则，什么情况下`/etc/hosts`会被覆盖？ 多次不能复现。由于环境问题，未分析到不能rename的原因。另外docker启动`--net host`容器时，会拷贝`/etc/hosts`。<br/>
+规避方案：可以尝试新建一个/etc/hosts文件，敲以下命令如：
+```sh
+cat /etc/hosts > /etc/hosts.bk
+mv /etc/hosts.bk /etc/hosts
+```
 
 ## 已知问题
 通过此脚本安装可能会使图形界面不可用，Ubuntu/Centos某些情况可能出现，但是还不知具体冲突原因。
